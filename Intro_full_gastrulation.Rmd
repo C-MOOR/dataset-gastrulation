@@ -1,0 +1,58 @@
+---
+title: "Full Mouse Gastrulation Dataset"
+author: "Lindsay Hayes"
+date: "`r Sys.Date()`"
+output:
+  html_notebook:
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+  html_document:
+    toc: yes
+    df_print: paged
+editor_options:
+  chunk_output_type: inline
+---
+
+## Load Packages
+```{r message=FALSE}
+library(scran)
+library(scater)
+library(tidyverse)
+```
+
+
+## Load Full Gastrulation Dataset
+This will take a few minutes to load so be patient. 
+You need to run all lines to log normalize the data.
+It will take several minutes.
+```{r}
+load("~/workspace/c_moor_data/gastrulation/gastrulation_sce.rda")
+sce <- sce[,colData(sce)$stage != "mixed_gastrulation"]
+sce <- logNormCounts(sce)
+```
+
+In your previous gatrulation dataset you only had 1 single sample that was a snapshot of the full dataset. Last week you went over the different types of metadata in the gastrulation dataset including: `celltype`, `stage`, and `sample`
+
+Now with the full data set you can perform your `plotReducedDim` and `plotExpression` using `stage`! Try it out.
+
+# Plot cells from all the samples.
+For your project, use this sce data along with your prevous R Notebook to plot by stage or sample.
+```{r}
+plotReducedDim(object = sce, dimred="umap", colour_by="stage")
+```
+# Plot the expression of your gene of interest
+```{r}
+gene_name <- "Wnt1"
+gene_id <- rowData(sce)[which(rowData(sce)[,2] %in% gene_name),1]
+plotExpression(object = sce, features = gene_id, x = "stage", colour_by = "stage") + theme(axis.text.x = element_text(angle = 90)) + labs(title = gene_name)
+```
+
+Try one (or more!) of the following tricks for your project work this week. Feel free to post on discourse if you have problems or want feedback on a plot!
+
+## Check out: 
+
+https://help.c-moor.org/c/look-at-this/8
+
+https://help.c-moor.org/t/tips-for-pretty-plots/192
