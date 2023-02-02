@@ -1,0 +1,61 @@
+---
+title: "Gastrulation Subsetting and Cross-Modal Plotting"
+author: "Lindsay Hayes"
+output:
+  html_notebook:
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+  html_document:
+    toc: yes
+    df_print: paged
+editor_options:
+  chunk_output_type: inline
+---
+
+
+## Load the data & Libraries
+```{r, message=FALSE, warning=FALSE}
+library(scater)
+library(scran)
+library(ggplot2)
+library(cowplot)
+library(SingleCellExperiment)
+```
+```{r}
+# load data
+load("~/workspace/c_moor_data/gastrulation/gastrulation_sce.rda")
+sce <- sce[,colData(sce)$stage != "mixed_gastrulation"]
+sce <- sce[,!is.na(sce$celltype)]
+sce <- logNormCounts(sce)
+table(sce$celltype)
+```
+
+# Plotting the gastrulation across modalities using facet_wrap()
+```{r, warning=FALSE}
+gene_name <- "Wnt1"
+gene_id <- rowData(sce)[which(rowData(sce)[,2] %in% gene_name),1]
+
+# favorite plot to combine both stage and cell type
+plotExpression(sce, features = gene_id, colour_by = "celltype", x = "celltype") + theme(axis.text.x = element_text(angle = 90), legend.position = "none") + facet_wrap( ~colData(sce)$stage ) + labs(subtitle = gene_name)
+```
+
+# **Subset** a specific stage or cell type
+```{r}
+# subset only E7.5 stage
+sce_E8.5 <- sce[,colData(sce)$stage == "E8.5"]
+
+# subset just the endoderm cells. Not all cells that contain the term "endoderm"
+sce_brain <- sce[,grep("Forebrain/Midbrain/Hindbrain", colData(sce)$celltype)]
+
+# You can use the favorite plot above to plot these subsetted data. Just remember to update the "sce" to the subsetted data. 
+```
+
+# plot just the brain cells or the E8.5 cells
+```{r, warning=FALSE}
+plotExpression(sce_brain, features = gene_id, colour_by = "celltype", x = "celltype") + theme(axis.text.x = element_text(angle = 90), legend.position = "none") + facet_wrap( ~colData(sce_brain)$stage ) + labs(subtitle = gene_name, title = "Brain Cells")
+
+plotExpression(sce_E8.5, features = gene_id, colour_by = "celltype", x = "celltype") + theme(axis.text.x = element_text(angle = 90), legend.position = "none") + labs(subtitle = gene_name, title = "E8.5")
+```
+
