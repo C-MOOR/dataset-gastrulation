@@ -1,0 +1,128 @@
+---
+title: "Pathway Analysis"
+author: "Lindsay Hayes"
+date: "`r Sys.Date()`"
+output:
+  html_notebook:
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+  html_document:
+    toc: yes
+    df_print: paged
+editor_options:
+  chunk_output_type: inline
+---
+
+# Load Packages
+```{r, warning=FALSE, message=FALSE}
+library(scran)
+library(scater)
+library(ggplot2)
+library(tidyverse)
+library(clusterProfiler)
+
+# install some new packages
+.libPaths( "/home/idies/workspace/c_moor_data/R/4.1.2/pathways" )
+
+devtools::install_version( "tidygraph", "1.2.0" )
+# select 3 for no package updates
+# select No for the personal library
+
+BiocManager::install( "pathview" )
+library(org.Hs.eg.db)
+library(pathview)
+
+```
+
+# Load Data
+```{r}
+# load data
+load("~/workspace/c_moor_data/gastrulation/gastrulation_sce.rda")
+sce <- sce[,colData(sce)$stage != "mixed_gastrulation"]
+sce <- sce[,!is.na(sce$celltype)]
+sce <- logNormCounts(sce)
+table(sce$celltype)
+```
+
+# Find Genes Enriched in your Cell Type
+```{r}
+# find genes enriched in all cell types (this step takes a lot time, load the file instead)
+marker.info <- scoreMarkers(sce, sce$celltype)
+
+load("~/workspace/Storage/C_MOOR/c_moor_ccc_su22/CellTypeMarkers.rda")
+```
+```{r}
+# pull out the genes in your cell type of interest
+brain <- marker.info$'Forebrain/Midbrain/Hindbrain'
+
+# Add the gene symbol so we know whats going on
+brain$SYMBOL <- rowData(sce)$SYMBOL
+```
+```{r}
+# Plot a histogram of the fold change enrichment in your cell type
+hist(brain$mean.logFC.detected)
+
+# Pull out the genes that are most and least enriched in that cluster
+brain.filt <- brain[(abs(brain$mean.logFC.detected) > 2),]
+
+# Make sure the filter worked correct
+hist(brain.filt$mean.logFC.detected)
+
+# Check how many genes made the cut
+dim(brain.filt)
+
+# pull out those top genes and fold changes to make a cleaned up table
+top_genes <- brain.filt[order(brain.filt$rank.logFC.detected, decreasing=FALSE),c(15,19,20)]
+top_genes
+```
+
+# plot one of the top hits, is it enriched in your cell type? 
+```{r}
+gene_name <- "En1"
+gene_id <- rowData(sce)[which(rowData(sce)[,2] %in% gene_name),1]
+plotExpression(object = sce, features = gene_id, x = "celltype", colour_by = "celltype") + theme(axis.text.x = element_text(angle = 90), legend.position="none") + labs(subtitle = "En1")
+```
+
+# What functional pathway is most represented in these genes? 
+```{r}
+# convert the symbols to the ENTREZ GENE ID (not every gene makes the cut here)
+eg = bitr(toupper(top_genes$SYMBOL), fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db")
+dim(eg) # how many made it?
+
+# This is all the genes in the data set to compare for the pathway analysis
+background <- bitr(toupper(rowData(sce)$SYMBOL), fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db")
+dim(background)
+
+# check which KEGG pathways those genes fall into
+kegg <- enrichKEGG(
+      eg$ENTREZID,
+      organism = "hsa",
+      keyType = "kegg",
+      pvalueCutoff = 0.1,
+      pAdjustMethod = "BH",
+      universe = background$ENTREZID,
+      minGSSize = 10,
+      maxGSSize = 500,
+      qvalueCutoff = 0.2,
+      use_internal_data = FALSE)
+kegg
+
+#check out the results
+head(kegg@result)
+
+# check out one of the top KEGG pathways
+browseKEGG(kegg, 'hsa04080')
+
+# Add in the fold changes with the ENTREZ GENE ID table
+eg$FC <- top_genes$mean.logFC.detected[match(eg$SYMBOL, toupper(top_genes$SYMBOL))]
+
+# Check out the KEGG Pathway with the enriched genes colored by the log fold change enrichment in the cell type
+pathview(gene.data  = eg$ENTREZID,
+                     pathway.id = "hsa04080",
+                     species    = "hsa",
+                     limit      = list(gene=max(abs(eg$FC)), cpd=1))
+# This automatically saves the plot in your working directory. Look for the pathview file in your files tab
+
+```
