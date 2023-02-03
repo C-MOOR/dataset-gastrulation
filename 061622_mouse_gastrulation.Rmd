@@ -1,0 +1,259 @@
+---
+title: "Explore Mouse Gastrulation Data"
+author: "Matt McCoy and Lindsay Hayes"
+date: "June 15, 2022"
+output:
+  html_notebook:
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+  html_document:
+    toc: yes
+    df_print: paged
+editor_options:
+  chunk_output_type: inline
+---
+
+# Summary
+
+- Embryo Development -- https://www.pnas.org/content/105/34/12331
+- Publication -- https://pubmed.gov/30787436
+- Shiny -- https://marionilab.cruk.cam.ac.uk/MouseGastrulation2018
+- Dataset -- https://bioconductor.org/packages/MouseGastrulationData
+
+# Load packages
+
+```{r message=FALSE}
+library(scran)
+library(scater)
+library(tidyverse)
+```
+
+# Gastrulation data
+## Load data and metadata
+```{r}
+# Create a variable called 'sce' that contains our Large SingleCellExperiment object from a file using R function readRDS()
+sce <- readRDS(file = "~/workspace/Storage/C_MOOR/c_moor_ccc_su22/gastrulation_sce.RDS")
+
+# Create a variable 'metadata.df' that contains our metadata from a file using R function read.table()
+metadata.df <- read.table(
+  file = "~/workspace/Storage/C_MOOR/c_moor_ccc_su22/gastrulation_meta.tsv", 
+  sep = "\t",
+  header = T)
+```
+
+## Explore metadata
+```{r}
+metadata.df
+```
+
+### Number of cells per celltype
+There are several variables we could look at. Let's start with number of cells of each celltype:
+```{r}
+# Use table() to generate a contingency table
+table(metadata.df$celltype)
+
+# Use base R graphics to plot number of cells per cell type
+barplot(
+  table(metadata.df$celltype), 
+  las = 1, 
+  horiz = T, 
+  cex.names = 0.5, 
+  main = "Cells per Celltype", 
+  xlab="number of cells")
+```
+### ggplot
+I prefer using the R package 'ggplot2', in large part because of its versatility. Here is one simple way and one complex way to use ggplot() to create a barplot of number of cells of each celltype.
+```{r}
+# Simple way using ggplot()
+ggplot(data = metadata.df) + 
+  geom_bar(mapping = aes(y = celltype, x = ..count..))
+
+# And here is a more complicated way, just to show an example of what you can do with `ggplot2` and `dplyr` packages
+metadata.df %>%
+  na.omit() %>%
+  group_by(celltype) %>%
+  summarise(count = n()) %>%
+ggplot(
+  mapping = aes(
+    x = reorder(celltype, -count), # reorder columns based on the counts
+    y = count,
+    fill = celltype)) + 
+  geom_bar(stat = "identity", col = "black") +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust=1), legend.position = "none") +
+  xlab("") + 
+  ylab("Count") +
+  ggtitle("Number of cells per celltype")
+```
+### Cells per stage
+```{r}
+# Contingency table
+table(metadata.df$stage)
+
+# Simple plot
+ggplot(data = metadata.df) + 
+  geom_bar(mapping = aes(y = stage, x = ..count..))
+
+# More complicated plot!
+metadata.df %>%
+  na.omit() %>%
+  group_by(stage) %>%
+  summarise(count = n()) %>%
+ggplot(
+  mapping = aes(
+    x = stage, 
+    y = count,
+    fill = stage)) + 
+  geom_col(col = "black") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust=1), legend.position = "none") +
+  xlab("") + 
+  ylab("Count") +
+  ggtitle("Number of cells per stage")
+```
+### Cells per sample
+```{r}
+# What do we replace `replace_me` with to make this work?
+# Hint: look at the column names of metadata.df dataframe
+
+# Contingency table of cells per sample.
+table(replace_me)
+
+# Simple plot of cells per sample.
+ggplot(data = metadata.df) + 
+  geom_bar(mapping = aes(y = replace_me, x = ..count..))
+
+# More complicated plot!
+metadata.df %>%
+  na.omit() %>%
+  group_by(replace_me) %>%
+  summarise(count = n()) %>%
+ggplot(
+  mapping = aes(
+    x = reorder(replace_me, -count), 
+    y = count) + 
+  geom_col(col = "black") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust=1), legend.position = "none") +
+  xlab("Sample") + 
+  ylab("Count") +
+  ggtitle("Number of cells per sample")
+```
+
+### Cells and samples per stage
+```{r}
+# We can use table to make a contingency plot with more than one variable.
+# To ask how many cells come from samples at each stage, input both variables into table()
+table(metadata.df$sample, metadata.df$stage)
+
+# The R package `dplyr' has many useful functions. Here we can use pipe (%>%) and summarise() to find the number of samples and cells in each stage
+metadata.df %>% 
+  group_by(stage) %>% 
+  summarise(
+    samples = length(unique(sample)), 
+    cells = length(sample))
+
+# How many cells from each samples are there?
+table(metadata.df$sample)
+
+# Why might there be a difference in the number of cells from each sample? 
+
+# How many cells come from samples at each stage?
+table(metadata.df$sample, metadata.df$stage)
+barplot(
+  table(metadata.df$sample, metadata.df$stage),
+  main = "Cells per sample per stage", 
+  ylab = "Number of cells")
+
+# Now with ggplot
+metadata.df %>% 
+  group_by(stage, sample) %>% 
+  summarise(cells = n()) %>%
+  ggplot(aes(x = stage, y = cells, fill = sample)) + 
+  geom_bar(position = "stack", stat = "identity", col = "black") +
+  xlab("") + ylab("Number of cells") +
+  ggtitle("Cells per sample per stage") +
+  scale_fill_viridis_c() +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust=1))
+```
+### Cells and samples per celltype 
+```{r}
+# How many cells come from each sample and celltype?
+table(metadata.df$sample, metadata.df$celltype)
+
+# table() is very useful, but there is also a way to use dplyr, which has many additional functions
+metadata.df %>%
+  group_by(sample, celltype) %>% 
+  summarise(
+    samples = length(unique(sample)), 
+    cells = length(sample))
+
+# You can pipe the dplyr results directly into ggplot, which is very useful for fast calculations you don't need to run again
+metadata.df %>% 
+  group_by(celltype) %>% 
+  summarise(
+    samples = length(unique(sample)),
+    cells = length(sample)) %>%
+  ggplot(
+    mapping = aes(
+      x = samples,
+      y = celltype,
+      fill = cells)) +
+  geom_col()
+
+# However, if you find yourself rerunning the same commands over and over again, and if the commands tend to take a long time (e.g. for loop over a large matrix) it can be more efficient to store the manipulations as a variable (here we call it t`), then just feed the variable into ggplot anytime you need it.
+t <- metadata.df %>% 
+  group_by(celltype) %>% 
+  summarise(
+    samples = length(unique(sample)),
+    cells = length(sample))
+ggplot(
+  data = t, # here we add the variable `t`
+  mapping = aes(
+    x = samples, 
+    y = celltype, 
+    fill = cells)) + 
+  geom_col()
+```
+## Explore expression data
+### Dimensionality reduction: UMAP
+Now instead of just looking at the metadata, we can look at the expression of genes in each cell. There are a few simple ways to do this. The first is using a dimensionality reduction technique called UMAP. A simple explanation for a UMAP plot is that each point represents a single cell, cells with similar expression cluster together, and the color of the cell can be used to represent any other information we are interested in, such as the expression level of a specific gene, the cell type, etc.
+
+Here is a simple way to plot UMAP using the function plotReducedDim() from the 'scater' package. Here the color of the cell represents the cell type.
+```{r}
+plotReducedDim(object = sce, dimred="umap", colour_by="celltype")
+```
+When you've been using R long enough, you can recognize that the function plotReducedDim() uses ggplot() for its graphics. This is useful, because we know how to add features to ggplot. In this case, if we don't like the color scheme, we can override it by adding scale_color_discrete(), one of the many color functions of ggplot().
+```{r}
+plotReducedDim(object = sce, dimred="umap", colour_by="celltype") + 
+  scale_color_discrete()
+```
+This is still hard to tell what cell is what. To help, we can add text labels to each cluster.
+```{r}
+plotReducedDim(object = sce, dimred="umap", colour_by="celltype", text_by = "celltype", text_size = 2) + 
+  scale_color_discrete()
+```
+We can also change what the color represents. Here we want each cell to show it's expression level of ENSMUSG00000033227(Wnt6):
+```{r}
+plotReducedDim(object = sce, dimred="umap", colour_by="ENSMUSG00000033227")
+```
+### Violin and scatter plots
+The UMAP is great for making qualitative observations, but for something more quantitative, we can we use violin plots and scatter plots. This will plot the expression values for individual genes across cell types so we can compare the values between cell types more easily.
+```{r}
+plotExpression(object = sce, features = "ENSMUSG00000033227", x = "celltype", colour_by = "celltype") +
+  theme(axis.text.x = element_text(angle = 90))
+```
+# Three questions
+    1. When we plotted the cells per sample per stage (~line 150 of our R notebook), the numbers of cells for each cell type were very low for E6.5 and E6.75. Why might this be?
+    2. NA seemed to have the highest number of cells out of all cell types. What is NA?
+    3. Modify the code starting ~line 120 to plot the number of cells per sample.
+
+# Document software
+<details>
+```{r}
+sessionInfo()
+```
+</details>

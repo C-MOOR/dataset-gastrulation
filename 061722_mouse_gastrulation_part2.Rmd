@@ -1,0 +1,110 @@
+---
+title: "Explore Mouse Gastrulation Data"
+author: "Matt McCoy and Lindsay Hayes"
+date: "June 17, 2022"
+output:
+  html_notebook:
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+  html_document:
+    toc: yes
+    df_print: paged
+editor_options:
+  chunk_output_type: inline
+---
+
+# Summary
+
+- Embryo Development -- https://www.pnas.org/content/105/34/12331
+- Publication -- https://pubmed.gov/30787436
+- Shiny -- https://marionilab.cruk.cam.ac.uk/MouseGastrulation2018
+- Dataset -- https://bioconductor.org/packages/MouseGastrulationData
+
+# Load packages
+
+```{r message=FALSE}
+library(scran)
+library(scater)
+library(tidyverse)
+library(cowplot)
+```
+
+# Gastrulation data
+## Load data and metadata
+```{r}
+# Create a variable called 'sce' that contains our Large SingleCellExperiment object from a file using R function readRDS()
+sce <- readRDS(file = "~/workspace/Storage/C_MOOR/c_moor_ccc_su22/gastrulation_sce.RDS")
+
+# Create a variable 'metadata.df' that contains our metadata from a file using R function read.table()
+metadata.df <- read.table(
+  file = "~/workspace/Storage/C_MOOR/c_moor_ccc_su22/gastrulation_meta.tsv", 
+  sep = "\t",
+  header = T)
+```
+
+## Find co-expressed genes
+```{r}
+pwtt <- pairwiseTTests(
+  x = logcounts(sce), 
+  groups = sce$celltype, 
+  direction = "up"
+)
+
+cbm_all <- combineMarkers(
+  de.lists = pwtt$statistics, 
+  pairs = pwtt$pairs,
+  pval.type = "all"
+)
+
+head(cbm_all[["Notochord"]])
+```
+
+## Plot co-expressed genes!
+```{r}
+plotExpression(
+  object = sce, 
+  features = c("ENSMUSG00000034227", "ENSMUSG00000010136"),
+  x = "celltype", 
+  colour_by = "celltype") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+## Plot UMAP of co-expressed genes
+```{r}
+plot_grid(plotReducedDim(sce, dimred = "umap", colour_by = "ENSMUSG00000034227"),
+                   plotReducedDim(sce, dimred = "umap", colour_by = "ENSMUSG00000010136"))
+```
+
+## Filter cells that express both genes
+```{r}
+gene_A <- "ENSMUSG00000034227"
+gene_B <- "ENSMUSG00000010136"
+
+# Or you could match the ensembl gene id with the gene symbol
+gene_A <- which(rowData(sce)[,2] %in% "Foxj1")
+gene_B <- which(rowData(sce)[,2] %in% "Pifo")
+
+
+plot(logcounts(sce)[gene_A,], logcounts(sce)[gene_B,], xlab="Foxj1", ylab="Pifo")
+
+data.df <- tibble(
+    cell = sce$cell,
+    geneA = logcounts(sce)[gene_A,], 
+    geneB = logcounts(sce)[gene_B,]) %>% 
+  filter(
+    geneA > 0,
+    geneB > 0)
+
+coi <- colData(sce)$cell[colData(sce)$cell %in% data.df$cell]
+
+subset_sce <- sce[,coi]
+plot(logcounts(subset_sce)[gene_A,], logcounts(subset_sce)[gene_B,], xlab="Foxj1", ylab="Pifo")
+```
+
+# Document software
+<details>
+```{r}
+sessionInfo()
+```
+</details>
