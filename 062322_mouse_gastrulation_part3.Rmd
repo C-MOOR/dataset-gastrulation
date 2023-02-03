@@ -1,0 +1,138 @@
+---
+title: "Explore Mouse Gastrulation Data"
+author: "Matt McCoy and Lindsay Hayes"
+date: "June 23, 2022"
+output:
+  html_notebook:
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+  html_document:
+    toc: yes
+    df_print: paged
+editor_options:
+  chunk_output_type: inline
+---
+
+# Summary
+
+- Embryo Development -- https://www.pnas.org/content/105/34/12331
+- Publication -- https://pubmed.gov/30787436
+- Shiny -- https://marionilab.cruk.cam.ac.uk/MouseGastrulation2018
+- Dataset -- https://bioconductor.org/packages/MouseGastrulationData
+
+# Load packages
+
+```{r message=FALSE}
+library(scran)
+library(scater)
+library(tidyverse)
+library(cowplot)
+```
+
+# Gastrulation data
+## Load data and metadata
+```{r}
+# Create a variable called 'sce' that contains our Large SingleCellExperiment object from a file using R function readRDS()
+sce <- readRDS(file = "~/workspace/Storage/C_MOOR/c_moor_ccc_su22/gastrulation_sce.RDS")
+
+# Create a variable 'metadata.df' that contains our metadata from a file using R function read.table()
+metadata.df <- read.table(
+  file = "~/workspace/Storage/C_MOOR/c_moor_ccc_su22/gastrulation_meta.tsv", 
+  sep = "\t",
+  header = T)
+```
+
+## Find markers for each cell type
+```{r}
+pwtt <- pairwiseTTests(
+  x = logcounts(sce), 
+  groups = sce$celltype, 
+  direction = "up"
+)
+
+cbm_all <- combineMarkers(
+  de.lists = pwtt$statistics, 
+  pairs = pwtt$pairs,
+  pval.type = "all"
+)
+
+head(cbm_all[["Notochord"]])
+```
+
+```{r}
+names(cbm_all)
+#head(cbm_all[["Def. endoderm"]])
+```
+
+## Find top variable genes
+```{r}
+# Find top variable genes
+sce <- logNormCounts(sce)
+colLabels(sce) <- factor(sce$cluster)
+dec <- modelGeneVar(sce)
+top.hvgs <- getTopHVGs(dec, n=2000)
+```
+
+## Find correlated genes
+```{r}
+# Create a variable with your favorite gene
+my_favorite_gene <- "ENSMUSG00000033227"
+
+# Create a variable with you 
+of.interest <- c(top.hvgs[1:200], my_favorite_gene)
+cor.pairs <- correlatePairs(sce, subset.row = of.interest)
+cor.pairs
+```
+
+## Filter object for genes we're interested in
+```{r}
+cor.pairs %>%
+  as_tibble() %>%
+  filter(gene1 == my_favorite_gene)
+```
+
+## Plot co-expressed genes!
+```{r}
+plotExpression(
+  object = sce, 
+  features = c("ENSMUSG00000033227", "ENSMUSG00000027186"),
+  x = "celltype", 
+  colour_by = "celltype") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
+```
+
+## Plot UMAP of co-expressed genes
+```{r}
+plotReducedDim(sce, dimred = "umap", colour_by = "ENSMUSG00000033227")
+
+plot_grid(plotReducedDim(sce, dimred = "umap", colour_by = "ENSMUSG00000033227"),
+                   plotReducedDim(sce, dimred = "umap", colour_by = "ENSMUSG00000027186"))
+```
+
+## Plot gene expression over time
+```{r}
+# Backup sce
+sce.BAK <- sce
+# Load the full dataset
+load(file = "~/workspace/c_moor_data/gastrulation/gastrulation_sce.rda")
+sce <- logNormCounts(sce)
+
+# Subset full dataset to just the celltypes you are interested in
+sce_subset <- sce[,sce$celltype %in% "ExE ectoderm"]
+
+plotExpression(
+  object = sce_subset, 
+  features = c("ENSMUSG00000033227", "ENSMUSG00000027186"),
+  x = "stage", 
+  colour_by = "stage") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+# Document software
+<details>
+```{r}
+sessionInfo()
+```
+</details>
