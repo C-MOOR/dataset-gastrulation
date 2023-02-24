@@ -13,27 +13,25 @@
   - Introducing scRNA-seq Data and R Notebooks (Assignment / Discussion) [[assignment](https://docs.google.com/document/d/12uwz7L-W0wZwwcFdWRr3yPZ1ISnnXOM4-1de9OY2B_M/edit#heading=h.9g3iu0iw5wkd)]
 
 ## Evaluate the metadata for the cells in the scRNA-seq gastrulation dataset
-  - gastrulation_Meta_230202.Rmd
-  - gastrulation_Meta_230202.html
+  - Explore Mouse Gastrulation Metadata (Assignment / Discussion) [[r-notebook](https://github.com/C-MOOR/dataset-gastrulation/blob/main/gastrulation_Meta_230202.Rmd)][[html](https://github.com/C-MOOR/dataset-gastrulation/blob/main/gastrulation_Meta_230202.html)]
 
 ## Evaluate one individual sample to get a feel for the gastrulation gene expression dataset
-  - 061622_mouse_gastrulation.Rmd
-  - 061722_mouse_gastrulation_part2.Rmd
-  - 062322_mouse_gastrulation_part3.Rmd
+  - Explore Mouse Gastrulation Data
+    - Part 1 (Assignment / Discussion) [[r-notebook](https://github.com/C-MOOR/dataset-gastrulation/blob/main/061622_mouse_gastrulation.Rmd)]
+    - Part 2 (Assignment / Discussion) [[r-notebook](https://github.com/C-MOOR/dataset-gastrulation/blob/main/061722_mouse_gastrulation_part2.Rmd)]
+    - Part 3 (Assignment / Discussion) [[r-notebook](https://github.com/C-MOOR/dataset-gastrulation/blob/main/062322_mouse_gastrulation_part3.Rmd)]
 
 ## Use the full gastrulation dataset to explore hypotheses
-  - Intro_full_gastrulation.Rmd
-  - Intro_full_gastrulation.nb.html
+  - Explore Full Mouse Gastrulation Dataset (Assignment / Discussion) [[r-notebook](https://github.com/C-MOOR/dataset-gastrulation/blob/main/Intro_full_gastrulation.Rmd)][[html](https://github.com/C-MOOR/dataset-gastrulation/blob/main/Intro_full_gastrulation.nb.html)]
 
 ## Subset certain cell populations for further analysis from the full gastrulation dataset
-  - full_gastrulation_Subset.Rmd
-  - full_gastrulation_Subset.nb.html
+  - Gastrulation Subsetting and Cross-Modal Plotting (Assignment / Discussion) [[r-notebook](https://github.com/C-MOOR/dataset-gastrulation/blob/main/full_gastrulation_Subset.Rmd)][[html](https://github.com/C-MOOR/dataset-gastrulation/blob/main/full_gastrulation_Subset.nb.html)]
 
 ## Perform pathway analysis on the enriched genes in your cell subset
-  - 230202_Pathway.Rmd
-  - 230202_Pathway.nb.html
-  - hsa04080.pathview.png
-  - hsa04080.png
+  - Pathway Analysis (Assignment / Discussion) [[r-notebook]](https://github.com/C-MOOR/dataset-gastrulation/blob/main/230202_Pathway.Rmd)][[html](https://github.com/C-MOOR/dataset-gastrulation/blob/main/230202_Pathway.nb.html)]
+  - Example: Neuroactive Ligand-Receptor Interaction
+<img src="https://github.com/C-MOOR/dataset-gastrulation/blob/main/hsa04080.pathview.png" height=500>
+<img src="https://github.com/C-MOOR/dataset-gastrulation/blob/main/hsa04080.png" height=500>
 
 ## Getting Help
 
