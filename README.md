@@ -3,7 +3,7 @@
 # Analyzing Gastrulation scRNA-seq Using R
 
 - [Introduction to scRNA-seq](#introduction-to-scrna-seq)
-- [Overview of mouse gastrulation scRNA-seq data](#overview-of-mouse-gastrulation-scRNA-seq-data)
+- [Overview of mouse gastrulation scRNA-seq data](#overview-of-mouse-gastrulation-scrna-seq-data)
 - [Evaluate the metadata for the cells in the scRNA-seq gastrulation dataset](#evaluate-the-metadata-for-the-cells-in-the-scrna-seq-gastrulation-dataset)
 - [Evaluate one individual sample to get a feel for the gastrulation gene expression dataset](#evaluate-one-individual-sample-to-get-a-feel-for-the-gastrulation-gene-expression-dataset)
 - [Use the full gastrulation dataset to explore hypotheses](#use-the-full-gastrulation-dataset-to-explore-hypotheses)
@@ -14,8 +14,9 @@
   - Introducing scRNA-seq Data and R Notebooks (Assignment / Discussion) [[assignment](https://docs.google.com/document/d/12uwz7L-W0wZwwcFdWRr3yPZ1ISnnXOM4-1de9OY2B_M/edit#heading=h.9g3iu0iw5wkd)]
 
 ## Overview of mouse gastrulation scRNA-seq data
- - Source of mouse gastrulation scRNA-seq data:
-    - Pijuan-Sala B, Griffiths JA, Guibentif C, Hiscock TW, Jawaid W, Calero-Nieto FJ, Mulas C, Ibarra-Soria X, Tyser RCV, Ho DLL, Reik W, Srinivas S, Simons BD, Nichols J, Marioni JC, Göttgens B. A single-cell molecular map of mouse gastrulation and early organogenesis. Nature. 2019 Feb;566(7745):490-495. doi: 10.1038/s41586-019-0933-9. Epub 2019 Feb 20. PMID: 30787436; PMCID: PMC6522369 [[link](https://pubmed.ncbi.nlm.nih.gov/30787436/)]
+  - [Pijuan-Sala et al. (Nature 2019)](https://pubmed.ncbi.nlm.nih.gov/30787436/) generated scRNA-seq data during mouse gastrulation. In this module, we will learn to analyze this data ourselves using R.
+
+<figure><img src="https://github.com/C-MOOR/dataset-gastrulation/blob/main/41586_2019_933_Fig1_HTML.webp" style="width:70%"><figcaption align = "center"><b>Fig. 1: A single-cell resolution atlas of mouse gastrulation and early organogenesis. a, Overview of embryonic developmental time points sampled, alongside corresponding Theiler stages (TS9–TS12) and Downs and Davies stages. Numbers indicate days post-fertilization. PrS, pre-streak; ES, early streak; MS, mid-streak; LS, late streak; OB, neural plate no bud; EB, neural plate early bud; LB, neural plate late bud; EHF, early headfold; LHF, late headfold; 1–7S, 1–7 somites. b, Representative images of sampled embryos. Scale bars, 0.25 mm. c, Uniform manifold approximation and projection (UMAP) plot showing all the cells of the atlas (116,312 cells). Cells are coloured by their cell-type annotation and numbered according to the legend below. Def., definitive; ExE, extra-embryonic; prog., progenitor. d, Fraction of cell type per time point, displaying a progressive increase in cell-type complexity throughout our sampling. Figure and legend from Pijuan-Sala et al. (Nature 2019).</b></figcaption></figure>
 
 ## Evaluate the metadata for the cells in the scRNA-seq gastrulation dataset
   - Explore Mouse Gastrulation Metadata (Assignment / Discussion) [[r-notebook](https://github.com/C-MOOR/dataset-gastrulation/blob/main/gastrulation_Meta_230202.Rmd)][[html](https://github.com/C-MOOR/dataset-gastrulation/blob/main/gastrulation_Meta_230202.html)]
