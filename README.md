@@ -2,7 +2,8 @@
 
 # Analyzing Gastrulation scRNA-seq Using R
 
-- [Introduction to single-cell RNA-seq (scRNA-seq)](#introduction-to-scrna-seq)
+- [Introduction to scRNA-seq](#introduction-to-scrna-seq)
+- [Overview of mouse gastrulation scRNA-seq data](#overview-of-mouse-gastrulation-scRNA-seq-data)
 - [Evaluate the metadata for the cells in the scRNA-seq gastrulation dataset](#evaluate-the-metadata-for-the-cells-in-the-scrna-seq-gastrulation-dataset)
 - [Evaluate one individual sample to get a feel for the gastrulation gene expression dataset](#evaluate-one-individual-sample-to-get-a-feel-for-the-gastrulation-gene-expression-dataset)
 - [Use the full gastrulation dataset to explore hypotheses](#use-the-full-gastrulation-dataset-to-explore-hypotheses)
@@ -11,6 +12,10 @@
 ## Introduction to scRNA-seq
   - Introducing scRNA-seq [[slides](https://docs.google.com/presentation/d/1eGY6k9cklSrb1NkT4c2Q3Uo3m_Zhs-xw07q_jXjQGuY/edit#slide=id.p1)]
   - Introducing scRNA-seq Data and R Notebooks (Assignment / Discussion) [[assignment](https://docs.google.com/document/d/12uwz7L-W0wZwwcFdWRr3yPZ1ISnnXOM4-1de9OY2B_M/edit#heading=h.9g3iu0iw5wkd)]
+
+## Overview of mouse gastrulation scRNA-seq data
+ - Source of mouse gastrulation scRNA-seq data:
+    - Pijuan-Sala B, Griffiths JA, Guibentif C, Hiscock TW, Jawaid W, Calero-Nieto FJ, Mulas C, Ibarra-Soria X, Tyser RCV, Ho DLL, Reik W, Srinivas S, Simons BD, Nichols J, Marioni JC, Göttgens B. A single-cell molecular map of mouse gastrulation and early organogenesis. Nature. 2019 Feb;566(7745):490-495. doi: 10.1038/s41586-019-0933-9. Epub 2019 Feb 20. PMID: 30787436; PMCID: PMC6522369 [[link](https://pubmed.ncbi.nlm.nih.gov/30787436/)]
 
 ## Evaluate the metadata for the cells in the scRNA-seq gastrulation dataset
   - Explore Mouse Gastrulation Metadata (Assignment / Discussion) [[r-notebook](https://github.com/C-MOOR/dataset-gastrulation/blob/main/gastrulation_Meta_230202.Rmd)][[html](https://github.com/C-MOOR/dataset-gastrulation/blob/main/gastrulation_Meta_230202.html)]
