@@ -1,0 +1,112 @@
+---
+title : "Welcome to the Mouse Gastrulation Dataset!"
+author: "Frederick J Tan"
+date  : "16 February 2022"
+output: 
+  html_notebook:
+    toc: true
+    toc_float: true
+---
+
+# Load packages
+
+<details>
+```{r message=FALSE}
+library( "HDF5Array" )
+library( "scater" )
+library( "tidyverse" )
+```
+</details>
+
+# Load MouseGastrulationData
+
+## Read dataset
+
+```{r message=FALSE}
+dataset <- "/home/idies/workspace/c_moor_data/gastrulation/mgd.21.hdf5/"
+sce <- loadHDF5SummarizedExperiment( dataset )
+```
+
+## Peek at dataset
+
+```{r}
+sce
+```
+
+# Explore cell types
+
+## View cell information (in columns)
+
+```{r}
+df <- colData( sce ) %>% data.frame()
+df
+```
+
+## Tabulate celltypes
+
+```{r}
+table( df$celltype )
+```
+
+## Plot UMAP
+
+```{r}
+plotReducedDim( sce, dimred="umap", colour_by="celltype" )
+```
+
+# Visualize expression
+
+## Plot UMAP
+
+```{r}
+plotReducedDim( sce, dimred="umap", colour_by="ENSMUSG00000027478" )
+```
+
+## Plot expressions
+
+```{r}
+plotExpression( sce, features="ENSMUSG00000027478", x="celltype" ) +
+  theme( axis.text.x = element_text( angle=90) )
+```
+
+# Explore SingleCellExperiment
+
+![](http://bioconductor.org/books/3.14/OSCA.intro/images/SingleCellExperiment.png)
+
+## Check class
+
+```{r}
+class( sce )
+```
+
+## Access counts
+
+- http://bioconductor.org/books/release/OSCA/data-infrastructure.html#filling-the-assays-slot
+
+```{r}
+m_sce <- assay( sce, "logcounts" )
+class( m_sce )
+```
+
+```{r}
+m_sce[ 1:5, 1:3 ]
+```
+
+## Access dimension reductions
+
+- http://bioconductor.org/books/release/OSCA/data-infrastructure.html#dimensionality-reduction-results
+
+```{r}
+df_umap <- reducedDim( sce, "umap" ) %>% data.frame()
+df_umap
+```
+
+# Document software
+
+<details>
+```{r}
+sessionInfo()
+```
+</details>
+
+
