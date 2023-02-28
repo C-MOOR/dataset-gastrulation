@@ -11,7 +11,7 @@
 
 ## Introduction to scRNA-seq
   - Introducing scRNA-seq [[slides](https://docs.google.com/presentation/d/1eGY6k9cklSrb1NkT4c2Q3Uo3m_Zhs-xw07q_jXjQGuY/edit#slide=id.p1)]
-  - Introducing scRNA-seq Data and R Notebooks (Assignment / Discussion) [[assignment](https://docs.google.com/document/d/12uwz7L-W0wZwwcFdWRr3yPZ1ISnnXOM4-1de9OY2B_M/edit#heading=h.9g3iu0iw5wkd)][[Rmd](https://github.com/C-MOOR/dataset-gastrulation/blob/main/r-notebooks/mouse_gastrulation.Rmd)][[html](http://htmlpreview.github.io/?(https://github.com/C-MOOR/dataset-gastrulation/blob/main/r-notebooks/mouse_gastrulation.html)]
+  - Introducing scRNA-seq Data and R Notebooks (Assignment / Discussion) [[assignment](https://docs.google.com/document/d/12uwz7L-W0wZwwcFdWRr3yPZ1ISnnXOM4-1de9OY2B_M/edit#heading=h.9g3iu0iw5wkd)][[Rmd](https://github.com/C-MOOR/dataset-gastrulation/blob/main/r-notebooks/mouse_gastrulation.Rmd)][[html](http://htmlpreview.github.io/?https://github.com/C-MOOR/dataset-gastrulation/blob/main/r-notebooks/mouse_gastrulation.html)]
 
 ## Overview of mouse gastrulation scRNA-seq data
   - [Pijuan-Sala et al. (Nature 2019)](https://pubmed.ncbi.nlm.nih.gov/30787436/) generated scRNA-seq data during mouse gastrulation. In this module, we will learn to analyze this data ourselves using R.
