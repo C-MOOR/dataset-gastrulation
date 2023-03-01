@@ -28,13 +28,13 @@
     - Part 3 (Assignment / Discussion) [[r-notebook](https://github.com/C-MOOR/dataset-gastrulation/blob/main/r-notebooks/rmd/062322_mouse_gastrulation_part3.Rmd)]
 
 ## Use the full gastrulation dataset to explore hypotheses
-  - Explore Full Mouse Gastrulation Dataset (Assignment / Discussion) [[r-notebook](https://github.com/C-MOOR/dataset-gastrulation/blob/main/r-notebooks/rmd/Intro_full_gastrulation.Rmd)][[html](https://github.com/C-MOOR/dataset-gastrulation/blob/main/r-notebooks/html/Intro_full_gastrulation.nb.html)]
+  - Explore Full Mouse Gastrulation Dataset (Assignment / Discussion) [[r-notebook](https://github.com/C-MOOR/dataset-gastrulation/blob/main/r-notebooks/rmd/Intro_full_gastrulation.Rmd)][[html](http://htmlpreview.github.io/?https://github.com/C-MOOR/dataset-gastrulation/blob/main/r-notebooks/html/Intro_full_gastrulation.nb.html)]
 
 ## Subset certain cell populations for further analysis from the full gastrulation dataset
-  - Gastrulation Subsetting and Cross-Modal Plotting (Assignment / Discussion) [[r-notebook](https://github.com/C-MOOR/dataset-gastrulation/blob/main/r-notebooks/rmd/full_gastrulation_Subset.Rmd)][[html](https://github.com/C-MOOR/dataset-gastrulation/blob/main/r-notebooks/html/full_gastrulation_Subset.nb.html)]
+  - Gastrulation Subsetting and Cross-Modal Plotting (Assignment / Discussion) [[r-notebook](https://github.com/C-MOOR/dataset-gastrulation/blob/main/r-notebooks/rmd/full_gastrulation_Subset.Rmd)][[html](http://htmlpreview.github.io/?https://github.com/C-MOOR/dataset-gastrulation/blob/main/r-notebooks/html/full_gastrulation_Subset.nb.html)]
 
 ## Perform pathway analysis on the enriched genes in your cell subset
-  - Pathway Analysis (Assignment / Discussion) [[r-notebook]](https://github.com/C-MOOR/dataset-gastrulation/blob/main/r-notebooks/rmd/230202_Pathway.Rmd)][[html](https://github.com/C-MOOR/dataset-gastrulation/blob/main/r-notebooks/html/230202_Pathway.nb.html)]
+  - Pathway Analysis (Assignment / Discussion) [[r-notebook]](https://github.com/C-MOOR/dataset-gastrulation/blob/main/r-notebooks/rmd/230202_Pathway.Rmd)][[html](http://htmlpreview.github.io/?https://github.com/C-MOOR/dataset-gastrulation/blob/main/r-notebooks/html/230202_Pathway.nb.html)]
   - Example: Neuroactive Ligand-Receptor Interaction
 <img src="https://github.com/C-MOOR/dataset-gastrulation/blob/main/r-notebooks/images/hsa04080.pathview.png" height=500>
 <img src="https://github.com/C-MOOR/dataset-gastrulation/blob/main/r-notebooks/images/hsa04080.png" height=500>
